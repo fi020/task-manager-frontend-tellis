@@ -7,6 +7,7 @@ import ThemeToggleButton from "./ThemeToggleButton";
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const token = localStorage.getItem("auth_token");
 
   const handleLogout = () => {
     logout();
@@ -24,7 +25,7 @@ const Navbar: React.FC = () => {
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <ThemeToggleButton />
-          {user ? (
+          {token ? (
             <>
               <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
               <Button color="inherit" onClick={handleLogout}>Logout</Button>

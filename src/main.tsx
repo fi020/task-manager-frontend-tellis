@@ -4,14 +4,17 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProviderWrapper } from "./contexts/ThemeContext";
+import { TaskProvider } from './contexts/TaskContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProviderWrapper>
 
       <AuthProvider>
+        <TaskProvider>
 
-        <App />
+          <App />
+        </TaskProvider>
       </AuthProvider>
     </ThemeProviderWrapper>
   </StrictMode>,
