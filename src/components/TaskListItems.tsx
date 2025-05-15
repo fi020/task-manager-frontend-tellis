@@ -25,7 +25,33 @@ const TaskListItems: React.FC<Props> = ({ tasks, onCheckboxClick, onTaskClick })
         <List>
             {tasks.map((task) => (
                 <React.Fragment key={task._id}>
-                    <ListItem button onClick={() => onTaskClick(task)}>
+                    <ListItem
+                        component="button"
+                        onClick={() => onTaskClick(task)}
+                        sx={(theme) => ({
+                            // background color adapts to theme
+                            bgcolor: "transparent",
+                            color: theme.palette.text.primary,
+
+                            // hover effect depending on theme mode
+                            "&:hover": {
+                                bgcolor: theme.palette.action.hover,
+                            },
+
+                            // remove native button styles
+                            border: "none",
+                            outline: "none",
+                            textAlign: "left",
+                            width: "100%",
+
+                            // optionally control focus styles
+                            "&:focus-visible": {
+                                outline: `2px solid ${theme.palette.primary.main}`,
+                                outlineOffset: 2,
+                            },
+                        })}
+                    >
+
                         <Checkbox
                             edge="start"
                             checked={task.completed}
