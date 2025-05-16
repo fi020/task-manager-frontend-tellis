@@ -5,44 +5,38 @@ import {
     ListItemText,
     Checkbox,
     Divider,
+    IconButton,
 } from "@mui/material";
-import type { Task} from "../types/task";
-import { useSnackbar } from "../contexts/SnackbarContext"; // Import snackbar context
+import EditIcon from "@mui/icons-material/Edit";
+import type { Task } from "../types/task";
+import { useSnackbar } from "../contexts/SnackbarContext";
 
 type Props = {
     tasks: Task[];
     onTaskClick: (task: Task) => void;
+    onEditClick: (task: Task) => void; // New prop
 };
 
-const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick }) => {
+const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick, onEditClick }) => {
     const { showUndoSnackbar } = useSnackbar();
 
-    const handleCheckboxClick = (task:Task) => {
-        // console.log("Checkbox clicked for task:", task);
+    const handleCheckboxClick = (task: Task) => {
         showUndoSnackbar(task._id, `Task ${task.title} will be marked as completed in 5 seconds.`, 5000);
-        // toggleTaskCompletion(task._id)
     };
+
     return (
         <List>
             {tasks.map((task) => (
                 <React.Fragment key={task._id}>
                     <ListItem
-                        component="button"
-                        onClick={() => onTaskClick(task)}
+                        component="div"
                         sx={(theme) => ({
                             bgcolor: "transparent",
                             color: theme.palette.text.primary,
                             "&:hover": {
                                 bgcolor: theme.palette.action.hover,
                             },
-                            border: "none",
-                            outline: "none",
-                            textAlign: "left",
                             width: "100%",
-                            "&:focus-visible": {
-                                outline: `2px solid ${theme.palette.primary.main}`,
-                                outlineOffset: 2,
-                            },
                         })}
                     >
                         <Checkbox
@@ -62,7 +56,12 @@ const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick }) => {
                                     textDecoration: task.completed ? "line-through" : "none",
                                 },
                             }}
+                            onClick={() => onTaskClick(task)}
+                            sx={{ cursor: "pointer" }}
                         />
+                        <IconButton onClick={() => onEditClick(task)} edge="end">
+                            <EditIcon />
+                        </IconButton>
                     </ListItem>
                     <Divider />
                 </React.Fragment>
