@@ -9,6 +9,7 @@ interface TaskContextProps {
     addTask: (task: TaskInput) => Promise<void>;
     fetchTasks: () => Promise<void>;
     toggleTaskCompletion: (taskId: string) => Promise<void>;
+    updateTask: (taskId: string, updatedData: Partial<Task>) => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
@@ -94,11 +95,42 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
     
-
-
-
+    const updateTask = async (taskId: string, updatedData: Partial<Task>) => {
+        try {
+            const token = localStorage.getItem("auth_token");
+            if (!token) {
+                throw new Error("No authentication token found. Please login first.");
+            }
+    
+            const response = await axios.put(
+                `${import.meta.env.VITE_API_URL}/tasks/${taskId}`,
+                updatedData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+    
+            const updatedTask: Task = response.data;
+    
+            // Update the task in local state
+            setTasks(prevTasks =>
+                prevTasks.map(task =>
+                    task._id === updatedTask._id ? updatedTask : task
+                )
+            );
+    
+            console.log("Task updated successfully:", updatedTask);
+        } catch (error) {
+            console.error("Failed to update task:", error);
+        }
+    };
+    
+    
     return (
-        <TaskContext.Provider value={{ tasks, setTasks, addTask, fetchTasks, toggleTaskCompletion }}>
+        <TaskContext.Provider value={{ tasks, setTasks, addTask, fetchTasks, toggleTaskCompletion,updateTask }}>
             {children}
         </TaskContext.Provider>
     );
