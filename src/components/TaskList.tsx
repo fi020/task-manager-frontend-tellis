@@ -3,18 +3,10 @@ import { useTaskContext } from "../contexts/TaskContext";
 import { Typography, Box } from "@mui/material";
 import TaskListItems from "./TaskListItems";
 import TaskDetailDialog from "./TaskDetailDialog";
-import { useSnackbar } from "../contexts/SnackbarContext"; // import hook
 import type { Task } from "../types/task";
-
-type PendingToggle = {
-    taskId: string;
-    timeoutId: ReturnType<typeof setTimeout>;
-};
 
 const TaskList: React.FC = () => {
     const { tasks } = useTaskContext();
-    // const { openSnackbar } = useSnackbar(); // use snackbar context
-    const [pendingToggle, setPendingToggle] = useState<PendingToggle | null>(null);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
     if (tasks.length === 0) {

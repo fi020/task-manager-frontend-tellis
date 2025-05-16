@@ -24,7 +24,7 @@ const UndoSnackbar: React.FC<UndoSnackbarProps> = ({
       message={message}
       autoHideDuration={autoHideDuration}
       transitionDuration={300}
-      onClose={(e, reason) => {
+      onClose={(_e, reason) => {
         if (reason === "clickaway") return;
         onClose();
       }}

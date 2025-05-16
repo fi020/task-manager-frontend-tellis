@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
     List,
     ListItem,
@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import type { Task} from "../types/task";
 import { useSnackbar } from "../contexts/SnackbarContext"; // Import snackbar context
-import { useTaskContext } from "../contexts/TaskContext";
 
 type Props = {
     tasks: Task[];
@@ -17,7 +16,6 @@ type Props = {
 
 const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick }) => {
     const { showUndoSnackbar } = useSnackbar();
-    const { toggleTaskCompletion } = useTaskContext();
 
     const handleCheckboxClick = (task:Task) => {
         // console.log("Checkbox clicked for task:", task);
