@@ -5,7 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import ThemeToggleButton from "./ThemeToggleButton";
 
 const Navbar: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const token = localStorage.getItem("auth_token");
 
