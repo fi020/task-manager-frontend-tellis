@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import TaskLoader from "../components/Loader";
 
 const Register: React.FC = () => {
   const { register } = useAuth();
@@ -9,21 +10,28 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const msg = await register(email, password);
       setMessage(msg);
+      setLoading(true);
+
       setTimeout(() => {
         console.log("Navigating to dashboard...");
         navigate("/login");
       }, 1000);
     } catch (error: any) {
       setMessage(error.message);
+    } finally {
+      setLoading(false);
     }
   };
-
+  if (loading) {
+    return <TaskLoader message="creating account..." />
+  }
   return (
     <Container maxWidth="sm">
       <Box component="form" onSubmit={handleSubmit} mt={5}>

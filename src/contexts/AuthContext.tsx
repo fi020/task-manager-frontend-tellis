@@ -38,8 +38,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         email,
         password,
       });
-
-      console.log("Login response:", res.data);
       const token = res.data.token;
       const userEmail = res.data.email;
       const message = res.data.message;
