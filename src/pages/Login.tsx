@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { TextField, Button, Container, Typography, Box, Alert } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Container,
+    Typography,
+    Box,
+    Alert
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import TaskLoader from "../components/Loader";
 
 const Login: React.FC = () => {
     const { login } = useAuth();
@@ -9,24 +17,29 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setMessage(null);
         setError(null);
+        setLoading(true);
 
         try {
             const resMessage = await login(email, password);
             setMessage(resMessage);
-            setTimeout(() => {
-                console.log("Navigating to dashboard...");
-                navigate("/dashboard");
-            }, 1000);
+            navigate("/dashboard");
         } catch (err: any) {
             setError(err.message);
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return <TaskLoader message="Authenticating your account..." />
+    }
 
     return (
         <Container maxWidth="sm">
