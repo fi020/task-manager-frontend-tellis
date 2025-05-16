@@ -47,10 +47,11 @@ const AddTask: React.FC = () => {
     return (
         <Box mt={3}>
             <Button variant="contained" color="primary" onClick={handleOpen}>
-                Add
+                Add Task
             </Button>
+            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
 
-            <Dialog open={open} onClose={handleClose}>
+                {/* <Dialog open={open} onClose={handleClose}> */}
                 <DialogTitle>Add Task</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -68,7 +69,9 @@ const AddTask: React.FC = () => {
                         name="description"
                         fullWidth
                         multiline
-                        rows={3}
+                        // rows={3}
+                        maxRows={20}
+                        minRows={5}
                         value={formData.description}
                         onChange={handleChange}
                     />

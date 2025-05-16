@@ -21,7 +21,7 @@ const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick, onEditClick }) => 
     const { showUndoSnackbar } = useSnackbar();
 
     const handleCheckboxClick = (task: Task) => {
-        showUndoSnackbar(task._id, `${task.title} will be marked as ${task.completed?"incomplete":"complete"}`, 5000);
+        showUndoSnackbar(task._id, `${task.title} will be marked as ${task.completed ? "incomplete" : "complete"}`, 5000);
     };
 
     return (
@@ -52,8 +52,20 @@ const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick, onEditClick }) => 
                             primary={task.title}
                             secondary={task.description}
                             primaryTypographyProps={{
-                                style: {
-                                    textDecoration: task.completed ? "line-through" : "none",
+                                sx: {
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    textDecoration: task.completed ? 'line-through' : 'none',
+                                },
+                            }}
+                            secondaryTypographyProps={{
+                                sx: {
+                                    display: "-webkit-box",
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: "vertical",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
                                 },
                             }}
                             onClick={() => onTaskClick(task)}

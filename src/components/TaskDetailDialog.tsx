@@ -6,6 +6,7 @@ import {
     DialogContentText,
     DialogActions,
     Button,
+    Box,
 } from "@mui/material";
 import type { Task } from "../types/task";
 
@@ -16,20 +17,40 @@ type Props = {
 
 const TaskDetailDialog: React.FC<Props> = ({ task, onClose }) => {
     return (
-        <Dialog open={!!task} onClose={onClose}>
+        <Dialog open={!!task} onClose={onClose} fullWidth
+            maxWidth="md">
             <DialogTitle>{task?.title}</DialogTitle>
+            {/* <DialogContent sx={{ overflow: 'visible' }}> */}
             <DialogContent>
-                <DialogContentText>{task?.description}</DialogContentText>
+                {/* Scrollable description box */}
+                <Box
+                    sx={{
+                        maxHeight: 500, 
+                        overflowY: 'auto',
+                        mb: 2,
+                        pr: 1,
+                        p: 2,
+                        border: '2px solid',          // adds a 1px solid border
+                        borderColor: 'divider',       // uses the theme's divider color for consistency
+                        borderRadius: 1, 
+                    }}
+                >
+                    <DialogContentText sx={{ whiteSpace: 'pre-wrap' }}>
+                        {task?.description}
+                    </DialogContentText>
+                </Box>
+
+                {/* Non-scrollable status and date */}
                 <DialogContentText>
                     <strong>Status:</strong>{" "}
                     <span style={{ color: task?.completed ? "green" : "orange", fontWeight: 500 }}>
                         {task?.completed ? "Completed" : "Pending"}
                     </span>
                 </DialogContentText>
+
                 {task && (
                     <>
-                        <br />
-                        <DialogContentText style={{ marginTop: 8 }}>
+                        <DialogContentText sx={{ mt: 1 }}>
                             <strong>Created:</strong> {new Date(task.createdAt).toLocaleString()}
                         </DialogContentText>
                         <DialogContentText>
