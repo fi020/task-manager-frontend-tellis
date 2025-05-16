@@ -1,25 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import type { Task, TaskInput, Tasks } from "../types/task";
 
-export interface Task {
-    _id: string;
-    title: string;
-    description: string;
-    completed: boolean;
-    user: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-}
-
-interface TaskInput {
-    title: string;
-    description: string;
-    completed: boolean;
-}
 
 interface TaskContextProps {
-    tasks: Task[];
+    tasks: Tasks;
     setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
     addTask: (task: TaskInput) => Promise<void>;
     fetchTasks: () => Promise<void>;
@@ -81,6 +66,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
     // In TaskContext.tsx
     const toggleTaskCompletion = async (taskId: string) => {
+        console.log("Toggling task completion for:", taskId);
         try {
             const token = localStorage.getItem("auth_token");
             if (!token) {

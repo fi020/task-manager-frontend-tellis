@@ -7,13 +7,7 @@ import {
     DialogActions,
     Button,
 } from "@mui/material";
-
-type Task = {
-    _id: string;
-    title: string;
-    description: string;
-    completed: boolean;
-};
+import type { Task } from "../types/task";
 
 type Props = {
     task: Task | null;
@@ -27,8 +21,22 @@ const TaskDetailDialog: React.FC<Props> = ({ task, onClose }) => {
             <DialogContent>
                 <DialogContentText>{task?.description}</DialogContentText>
                 <DialogContentText>
-                    Status: {task?.completed ? "Completed" : "Pending"}
+                    <strong>Status:</strong>{" "}
+                    <span style={{ color: task?.completed ? "green" : "orange", fontWeight: 500 }}>
+                        {task?.completed ? "Completed" : "Pending"}
+                    </span>
                 </DialogContentText>
+                {task && (
+                    <>
+                        <br />
+                        <DialogContentText style={{ marginTop: 8 }}>
+                            <strong>Created:</strong> {new Date(task.createdAt).toLocaleString()}
+                        </DialogContentText>
+                        <DialogContentText>
+                            <strong>Updated:</strong> {new Date(task.updatedAt).toLocaleString()}
+                        </DialogContentText>
+                    </>
+                )}
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary">

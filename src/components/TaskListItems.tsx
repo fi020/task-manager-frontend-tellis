@@ -6,21 +6,22 @@ import {
     Checkbox,
     Divider,
 } from "@mui/material";
-
-type Task = {
-    _id: string;
-    title: string;
-    description: string;
-    completed: boolean;
-};
+import type { Task} from "../types/task";
+import { useSnackbar } from "../contexts/SnackbarContext"; // Import snackbar context
 
 type Props = {
     tasks: Task[];
-    onCheckboxClick: (taskId: string) => void;
     onTaskClick: (task: Task) => void;
 };
 
-const TaskListItems: React.FC<Props> = ({ tasks, onCheckboxClick, onTaskClick }) => {
+const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick }) => {
+    const { showUndoSnackbar } = useSnackbar();
+
+    const handleCheckboxClick = (task:Task) => {
+        // console.log("Checkbox clicked for task:", task);
+        showUndoSnackbar(task._id, `Task ${task.title} will be marked as completed in 5 seconds.`, 5000);
+        // toggleTaskCompletion(task._id)
+    };
     return (
         <List>
             {tasks.map((task) => (
@@ -29,36 +30,28 @@ const TaskListItems: React.FC<Props> = ({ tasks, onCheckboxClick, onTaskClick })
                         component="button"
                         onClick={() => onTaskClick(task)}
                         sx={(theme) => ({
-                            // background color adapts to theme
                             bgcolor: "transparent",
                             color: theme.palette.text.primary,
-
-                            // hover effect depending on theme mode
                             "&:hover": {
                                 bgcolor: theme.palette.action.hover,
                             },
-
-                            // remove native button styles
                             border: "none",
                             outline: "none",
                             textAlign: "left",
                             width: "100%",
-
-                            // optionally control focus styles
                             "&:focus-visible": {
                                 outline: `2px solid ${theme.palette.primary.main}`,
                                 outlineOffset: 2,
                             },
                         })}
                     >
-
                         <Checkbox
                             edge="start"
                             checked={task.completed}
                             disableRipple
                             onClick={(e) => {
-                                e.stopPropagation(); // prevent triggering dialog
-                                onCheckboxClick(task._id);
+                                e.stopPropagation();
+                                handleCheckboxClick(task);
                             }}
                         />
                         <ListItemText
