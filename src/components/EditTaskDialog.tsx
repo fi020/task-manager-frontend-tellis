@@ -37,7 +37,7 @@ const EditTaskDialog: React.FC<Props> = ({ task, onClose, onSave }) => {
     };
 
     return (
-        <Dialog open={!!task} onClose={onClose} fullWidth maxWidth="sm">
+        <Dialog open={!!task} onClose={onClose} fullWidth maxWidth="md">
             <DialogTitle>Edit Task</DialogTitle>
             <DialogContent>
                 <TextField
@@ -51,6 +51,10 @@ const EditTaskDialog: React.FC<Props> = ({ task, onClose, onSave }) => {
                     label="Description"
                     fullWidth
                     margin="normal"
+                    multiline
+                    // rows={30}
+                    maxRows={20}
+                    minRows={5}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
