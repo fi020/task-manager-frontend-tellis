@@ -12,30 +12,10 @@ type PendingToggle = {
 };
 
 const TaskList: React.FC = () => {
-    const { tasks, toggleTaskCompletion } = useTaskContext();
+    const { tasks } = useTaskContext();
     // const { openSnackbar } = useSnackbar(); // use snackbar context
     const [pendingToggle, setPendingToggle] = useState<PendingToggle | null>(null);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-
-    // const handleCheckboxClick = (taskId: string) => {
-    //     if (pendingToggle) return;
-
-    //     const timeoutId = setTimeout(() => {
-    //         toggleTaskCompletion(taskId);
-    //         setPendingToggle(null);
-    //     }, 1000);
-
-    //     setPendingToggle({ taskId, timeoutId });
-    //     openSnackbar("Task will be marked as completed in 2e second.", 3000);
-    // };
-
-    // const handleUndo = () => {
-    //     if (pendingToggle) {
-    //         clearTimeout(pendingToggle.timeoutId);
-    //         setPendingToggle(null);
-    //         // You can add more undo logic here if needed
-    //     }
-    // };
 
     if (tasks.length === 0) {
         return (

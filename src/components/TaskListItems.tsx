@@ -6,9 +6,9 @@ import {
     Checkbox,
     Divider,
 } from "@mui/material";
-import type { Task } from "../types/task";
-import { useTaskContext } from "../contexts/TaskContext";
+import type { Task} from "../types/task";
 import { useSnackbar } from "../contexts/SnackbarContext"; // Import snackbar context
+import { useTaskContext } from "../contexts/TaskContext";
 
 type Props = {
     tasks: Task[];
@@ -16,33 +16,14 @@ type Props = {
 };
 
 const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick }) => {
-    const { toggleTaskCompletion } = useTaskContext();
     const { showUndoSnackbar } = useSnackbar();
+    const { toggleTaskCompletion } = useTaskContext();
 
-    const handleCheckboxClick = (taskId: string) => {
-        showUndoSnackbar(taskId, "Task will be marked as completed in 5 seconds.", 5000);
+    const handleCheckboxClick = (task:Task) => {
+        // console.log("Checkbox clicked for task:", task);
+        showUndoSnackbar(task._id, `Task ${task.title} will be marked as completed in 5 seconds.`, 5000);
+        // toggleTaskCompletion(task._id)
     };
-    const [pendingToggle, setPendingToggle] = useState<{
-        taskId: string;
-        timeoutId: ReturnType<typeof setTimeout>;
-    } | null>(null);
-
-    // const handleCheckboxClick = (taskId: string) => {
-    //     // if (pendingToggle) return;
-
-    //     console.log(`confirm is ${confirmUndo}`);
-    //     const timeoutId = setTimeout(() => {
-    //         if (!confirmUndo) {
-    //             console.log(`confirm is ${confirmUndo} and toggel is called`);
-    //             toggleTaskCompletion(taskId);
-    //             setPendingToggle(null);
-    //         }
-    //     }, 5000);
-
-    //     setPendingToggle({ taskId, timeoutId });
-    //     openSnackbar(`${taskId} Task will be marked as completed in 5 second.`, 3000);
-    // };
-
     return (
         <List>
             {tasks.map((task) => (
@@ -72,7 +53,7 @@ const TaskListItems: React.FC<Props> = ({ tasks, onTaskClick }) => {
                             disableRipple
                             onClick={(e) => {
                                 e.stopPropagation();
-                                handleCheckboxClick(task._id);
+                                handleCheckboxClick(task);
                             }}
                         />
                         <ListItemText

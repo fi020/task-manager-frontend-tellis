@@ -7,6 +7,7 @@ type UndoSnackbarProps = {
   autoHideDuration?: number;
   onUndo: () => void;
   onClose: () => void;
+  offset?: number;
 };
 
 const UndoSnackbar: React.FC<UndoSnackbarProps> = ({
@@ -15,19 +16,30 @@ const UndoSnackbar: React.FC<UndoSnackbarProps> = ({
   autoHideDuration = 5000,
   onUndo,
   onClose,
+  offset = 0,
 }) => {
   return (
     <Snackbar
       open={open}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       message={message}
+      autoHideDuration={autoHideDuration}
+      transitionDuration={300}
+      onClose={(e, reason) => {
+        if (reason === "clickaway") return;
+        onClose();
+      }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      style={{
+        bottom: 16 + offset,
+        left: 16,
+        position: "fixed", // Needed because disabling portal removes fixed behavior
+      }}
+      // disablePortal // Important: makes the Snackbar render in-place so style works
       action={
         <Button color="secondary" size="small" onClick={onUndo}>
-          UNDO this
+          UNDO
         </Button>
       }
-      autoHideDuration={autoHideDuration}
-      onClose={onClose}
     />
   );
 };

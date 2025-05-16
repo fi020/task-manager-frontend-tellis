@@ -66,6 +66,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
     // In TaskContext.tsx
     const toggleTaskCompletion = async (taskId: string) => {
+        console.log("Toggling task completion for:", taskId);
         try {
             const token = localStorage.getItem("auth_token");
             if (!token) {

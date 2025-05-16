@@ -3,6 +3,13 @@ import type { ReactNode } from "react";
 import UndoSnackbar from "../components/UndoSnackbar";
 import { useTaskContext } from "./TaskContext";
 
+type PendingToggle = {
+    taskId: string;
+    message: string;
+    timeoutId: ReturnType<typeof setTimeout>;
+    open: boolean;
+};
+
 type SnackbarContextType = {
     showUndoSnackbar: (taskId: string, message: string, delay?: number) => void;
 };
@@ -11,48 +18,54 @@ const SnackbarContext = createContext<SnackbarContextType | undefined>(undefined
 
 export const SnackbarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const { toggleTaskCompletion } = useTaskContext();
+    const [pendingToggles, setPendingToggles] = useState<PendingToggle[]>([]);
 
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState("");
-    const [pendingToggle, setPendingToggle] = useState<{
-        taskId: string;
-        timeoutId: ReturnType<typeof setTimeout>;
-    } | null>(null);
-
-    const showUndoSnackbar = (taskId: string, msg: string, delay = 5000) => {
-        setMessage(msg);
-        setOpen(true);
-
+    const showUndoSnackbar = (taskId: string, message: string, delay = 5000) => {
+        console.log("called");
+    
         const timeoutId = setTimeout(() => {
+            console.log("timeout triggered");
             toggleTaskCompletion(taskId);
-            setPendingToggle(null);
         }, delay);
-
-        setPendingToggle({ taskId, timeoutId });
+    
+        setPendingToggles((prev) => [
+            ...prev,
+            { taskId, timeoutId, message, open: true }
+        ]);
     };
+    
 
-    const handleUndo = () => {
-        if (pendingToggle) {
-            clearTimeout(pendingToggle.timeoutId);
-            setPendingToggle(null);
-        }
-        setOpen(false);
-    };
 
-    const handleClose = () => {
-        setOpen(false);
+
+    const handleUndo = (taskId: string) => {
+        setPendingToggles((prev) =>
+            prev.map((pt) => {
+                if (pt.taskId === taskId) {
+                    clearTimeout(pt.timeoutId);
+                    return { ...pt, open: false };
+                }
+                return pt;
+            })
+        );
+
+        setTimeout(() => {
+            setPendingToggles((prev) => prev.filter((pt) => pt.taskId !== taskId));
+        }, 300); // match animation duration
     };
 
     return (
         <SnackbarContext.Provider value={{ showUndoSnackbar }}>
             {children}
-            <UndoSnackbar
-                open={open}
-                message={message}
-                autoHideDuration={5000}
-                onUndo={handleUndo}
-                onClose={handleClose}
-            />
+            {pendingToggles.map((pt, index) => (
+                <UndoSnackbar
+                    key={pt.taskId}
+                    open={pt.open}
+                    message={pt.message}
+                    onUndo={() => handleUndo(pt.taskId)}
+                    onClose={() => handleUndo(pt.taskId)}
+                    offset={index * 60}
+                />
+            ))}
         </SnackbarContext.Provider>
     );
 };
