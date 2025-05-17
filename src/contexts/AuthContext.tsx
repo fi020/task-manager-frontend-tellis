@@ -21,8 +21,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (email: string, password: string): Promise<string> => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      console.log("API_URL:", API_URL);
       const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, { email, password });
       return res.data.message;
     } catch (error: any) {

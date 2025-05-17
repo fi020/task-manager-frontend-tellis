@@ -14,15 +14,11 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const msg = await register(email, password);
       setMessage(msg);
-      setLoading(true);
-
-      setTimeout(() => {
-        console.log("Navigating to dashboard...");
-        navigate("/login");
-      }, 1000);
+      navigate("/login");
     } catch (error: any) {
       setMessage(error.message);
     } finally {
